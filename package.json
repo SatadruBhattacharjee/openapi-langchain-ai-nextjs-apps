@@ -1,0 +1,13 @@
+{
+  "name": "nx-langchain-ai-nextjs-apps",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/workspace": "16.1.1",
+    "nx": "16.1.1",
+    "nx-cloud": "latest"
+  }
+}

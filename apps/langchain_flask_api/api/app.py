@@ -6,5 +6,5 @@ def home():
     return "Hello, Flask! "
 
 @app.route("/ingest")
-def home():
+def ingest():
     return "Hello, Flask! Ingest"

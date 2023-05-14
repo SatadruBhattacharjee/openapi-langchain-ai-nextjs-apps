@@ -23,22 +23,19 @@ import StopIcon from '../icons/pause.svg';
 
 import {
   Message,
-  SubmitKey,
   useChatStore,
   BOT_HELLO,
   createMessage,
   useAccessStore,
-  Theme,
   useAppConfig,
   DEFAULT_TOPIC,
 } from '../../store';
 
-import {
-  downloadAs,
-  selectOrCopy,
-  autoGrowTextArea,
-  useMobileScreen,
-} from '@chat/utils';
+import { SubmitKey, Theme } from '@chat/constant';
+
+import { downloadAs, selectOrCopy, autoGrowTextArea } from '@chat/utils';
+
+import { useMobileScreen } from '../../hooks/utils';
 
 import { copyToClipboard } from '../../ui-functions';
 

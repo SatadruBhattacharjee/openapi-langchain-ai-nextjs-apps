@@ -3,7 +3,8 @@ import { persist } from 'zustand/middleware';
 import { BUILTIN_MASKS } from '../masks';
 import { getLang, Lang } from '@chat/locals';
 import { DEFAULT_TOPIC, Message } from './chat';
-import { ModelConfig, ModelType, useAppConfig } from '@chat/constant';
+import { ModelConfig, ModelType } from '@chat/constant';
+import { useAppConfig } from './config';
 import { StoreKey } from '@chat/constant';
 
 export type Mask = {

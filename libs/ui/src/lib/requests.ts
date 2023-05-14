@@ -4,10 +4,10 @@ import {
   //ModelConfig,
   //ModelType,
   useAccessStore,
-  // useAppConfig,
+  useAppConfig,
   useChatStore,
 } from './store';
-import { ModelConfig, ModelType, useAppConfig } from '@chat/constant';
+import { ModelConfig, ModelType } from '@chat/constant';
 import { showToast } from './components/ui-lib/ui-lib';
 import { ACCESS_CODE_PREFIX } from '@chat/constant';
 

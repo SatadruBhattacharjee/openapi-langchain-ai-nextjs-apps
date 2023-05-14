@@ -23,13 +23,13 @@ import { ModelConfigList } from '../model-config/model-config';
 
 import { IconButton } from '../button';
 import {
-  SubmitKey,
   useChatStore,
-  Theme,
   useUpdateStore,
   useAccessStore,
   useAppConfig,
 } from '../../store';
+
+import { SubmitKey, Theme } from '@chat/constant';
 
 import Locale, { AllLangs, changeLang, getLang } from '@chat/locals';
 import { copyToClipboard } from '../../ui-functions';

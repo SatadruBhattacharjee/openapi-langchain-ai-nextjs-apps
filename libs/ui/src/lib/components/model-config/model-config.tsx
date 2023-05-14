@@ -1,4 +1,4 @@
-import { ALL_MODELS, ModalConfigValidator, ModelConfig } from '../../store';
+import { ALL_MODELS, ModalConfigValidator, ModelConfig } from '@chat/constant';
 
 import Locale from '@chat/locals';
 import { InputRange } from '../input-range/input-range';

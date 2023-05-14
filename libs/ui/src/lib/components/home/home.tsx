@@ -21,7 +21,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { SideBar } from '../sidebar/sidebar';
-import { useAppConfig } from '@chat/constant';
+import { useAppConfig } from '../../store';
 import { useMaskStore } from '../../store/mask';
 
 require('./polyfill');

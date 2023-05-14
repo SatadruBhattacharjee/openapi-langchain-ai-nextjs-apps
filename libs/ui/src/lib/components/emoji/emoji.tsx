@@ -4,7 +4,7 @@ import EmojiPicker, {
   Theme as EmojiTheme,
 } from 'emoji-picker-react';
 
-import { ModelType } from '../../store';
+import { ModelType } from '@chat/constant';
 
 import BotIcon from '../icons/bot.svg';
 import BlackBotIcon from '../icons/black-bot.svg';

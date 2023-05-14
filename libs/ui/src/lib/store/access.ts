@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 import { StoreKey } from "@chat/constant";
 import { getHeaders } from "../requests";
 import { BOT_HELLO } from "./chat";
-import { ALL_MODELS } from "./config";
+import { ALL_MODELS } from "@chat/constant";
 
 export interface AccessControlStore {
   accessCode: string;

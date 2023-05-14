@@ -1,0 +1,35 @@
+{
+  "name": "constant",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/constant/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/constant"
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs constant {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/libs/constant"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/libs/constant"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/constant/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

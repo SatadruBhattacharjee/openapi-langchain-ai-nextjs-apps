@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@chat/ui": ["libs/ui/src/index.ts"]
+      "@chat/constant": ["libs/constant/src/index.ts"],
+      "@chat/locals": ["libs/locals/src/index.ts"],
+      "@chat/ui": ["libs/ui/src/index.ts"],
+      "@chat/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

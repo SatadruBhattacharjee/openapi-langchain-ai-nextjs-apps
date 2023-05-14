@@ -1,0 +1,35 @@
+{
+  "name": "locals",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/locals/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/locals"
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs locals {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["coverage/libs/locals"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/libs/locals"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/locals/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

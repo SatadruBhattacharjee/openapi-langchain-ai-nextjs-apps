@@ -1,10 +1,10 @@
 import { AllLangs, getLang } from './lib/locals';
 import EN from './lib/en';
-import CN from './lib/cn';
+import IN from './lib/in';
 
 export * from './lib/locals';
 
 export default {
   en: EN,
-  cn: CN,
+  in: IN,
 }[getLang()] as typeof EN;

@@ -1,13 +1,13 @@
 import EN from './en';
-import CN from './cn';
+import IN from './in';
 
-export const AllLangs = ['en', 'cn'] as const;
+export const AllLangs = ['en', 'in'] as const;
 export type Lang = (typeof AllLangs)[number];
 
 const LANG_KEY = 'lang';
 const DEFAULT_LANG = 'en';
 
-export type { LocaleType } from './cn';
+export type { LocaleType } from './in';
 
 function getItem(key: string) {
   try {

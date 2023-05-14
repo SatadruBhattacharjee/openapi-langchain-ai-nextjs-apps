@@ -7,13 +7,13 @@ import {
   requestChatStream,
   requestWithPrompt,
 } from '../requests';
-import { trimTopic } from '../utils';
+import { trimTopic } from '@chat/utils';
 
-import Locale from '../locales';
+import Locale from '@chat/locals';
 import { showToast } from '../components/ui-lib/ui-lib';
-import { ModelType } from './config';
+import { ModelType } from '@chat/constant';
 import { createEmptyMask, Mask } from './mask';
-import { StoreKey } from '../constant';
+import { StoreKey } from '@chat/constant';
 
 export type Message = ChatCompletionResponseMessage & {
   date: string;

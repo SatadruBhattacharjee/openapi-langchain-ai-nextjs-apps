@@ -13,7 +13,8 @@ import EyeIcon from '../icons/eye.svg';
 import CopyIcon from '../icons/copy.svg';
 
 import { DEFAULT_MASK_AVATAR, Mask, useMaskStore } from '../../store/mask';
-import { Message, ModelConfig, ROLES, useChatStore } from '../../store';
+import { Message, ROLES, useChatStore } from '../../store';
+import { ModelConfig } from '@chat/constant';
 import {
   Input,
   List,
@@ -26,7 +27,7 @@ import { Avatar, AvatarPicker } from '../emoji/emoji';
 import Locale, { AllLangs, Lang } from '@chat/locals';
 import { useNavigate } from 'react-router-dom';
 
-import chatStyle from './chat.module.scss';
+import chatStyle from '../chat/chat.module.scss';
 import { useState } from 'react';
 import { downloadAs, readFromFile } from '@chat/utils';
 import { Updater } from '@chat/domain';

@@ -1,12 +1,13 @@
 import type { ChatRequest, ChatResponse } from '@chat/domain';
 import {
   Message,
-  ModelConfig,
-  ModelType,
+  //ModelConfig,
+  //ModelType,
   useAccessStore,
-  useAppConfig,
+  // useAppConfig,
   useChatStore,
 } from './store';
+import { ModelConfig, ModelType, useAppConfig } from '@chat/constant';
 import { showToast } from './components/ui-lib/ui-lib';
 import { ACCESS_CODE_PREFIX } from '@chat/constant';
 

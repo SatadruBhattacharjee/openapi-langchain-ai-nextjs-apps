@@ -1,7 +1,7 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { FETCH_COMMIT_URL, FETCH_TAG_URL, StoreKey } from "../constant";
-import { requestUsage } from "../requests";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { FETCH_COMMIT_URL, FETCH_TAG_URL, StoreKey } from '@chat/constant';
+import { requestUsage } from '../requests';
 
 export interface UpdateStore {
   lastUpdate: number;
@@ -20,11 +20,11 @@ function queryMeta(key: string, defaultValue?: string): string {
   let ret: string;
   if (document) {
     const meta = document.head.querySelector(
-      `meta[name='${key}']`,
+      `meta[name='${key}']`
     ) as HTMLMetaElement;
-    ret = meta?.content ?? "";
+    ret = meta?.content ?? '';
   } else {
-    ret = defaultValue ?? "";
+    ret = defaultValue ?? '';
   }
 
   return ret;
@@ -36,14 +36,14 @@ export const useUpdateStore = create<UpdateStore>()(
   persist(
     (set, get) => ({
       lastUpdate: 0,
-      remoteVersion: "",
+      remoteVersion: '',
 
       lastUpdateUsage: 0,
 
-      version: "unknown",
+      version: 'unknown',
 
       async getLatestVersion(force = false) {
-        set(() => ({ version: queryMeta("version") ?? "unknown" }));
+        set(() => ({ version: queryMeta('version') ?? 'unknown' }));
 
         const overTenMins = Date.now() - get().lastUpdate > 10 * ONE_MINUTE;
         if (!force && !overTenMins) return;
@@ -59,9 +59,9 @@ export const useUpdateStore = create<UpdateStore>()(
           set(() => ({
             remoteVersion: remoteId,
           }));
-          console.log("[Got Upstream] ", remoteId);
+          console.log('[Got Upstream] ', remoteId);
         } catch (error) {
-          console.error("[Fetch Upstream Commit Id]", error);
+          console.error('[Fetch Upstream Commit Id]', error);
         }
       },
 
@@ -83,6 +83,6 @@ export const useUpdateStore = create<UpdateStore>()(
     {
       name: StoreKey.Update,
       version: 1,
-    },
-  ),
+    }
+  )
 );

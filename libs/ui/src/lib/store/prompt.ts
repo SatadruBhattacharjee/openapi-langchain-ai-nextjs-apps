@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import Fuse from "fuse.js";
-import { getLang } from "../locales";
-import { StoreKey } from "../constant";
+import { getLang } from "@chat/locals";
+import { StoreKey } from "@chat/constant";
 
 export interface Prompt {
   id?: number;

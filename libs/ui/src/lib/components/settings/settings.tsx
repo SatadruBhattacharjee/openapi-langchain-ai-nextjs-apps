@@ -31,10 +31,10 @@ import {
   useAppConfig,
 } from '../../store';
 
-import Locale, { AllLangs, changeLang, getLang } from '../locales';
-import { copyToClipboard } from '../utils';
+import Locale, { AllLangs, changeLang, getLang } from '@chat/locals';
+import { copyToClipboard } from '../../ui-functions';
 import Link from 'next/link';
-import { Path, UPDATE_URL } from '../constant';
+import { Path, UPDATE_URL } from '@chat/constant';
 import { Prompt, SearchService, usePromptStore } from '../../store/prompt';
 import { ErrorBoundary } from '../error/error';
 import { InputRange } from '../input-range/input-range';

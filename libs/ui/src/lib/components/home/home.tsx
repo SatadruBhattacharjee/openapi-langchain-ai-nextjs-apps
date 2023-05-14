@@ -21,10 +21,10 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { SideBar } from '../sidebar/sidebar';
-import { useAppConfig } from '../../store/config';
+import { useAppConfig } from '@chat/constant';
 import { useMaskStore } from '../../store/mask';
 
-require('../polyfill');
+require('./polyfill');
 
 export function Loading(props: { noLogo?: boolean }) {
   return (

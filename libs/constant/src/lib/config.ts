@@ -1,24 +1,24 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { StoreKey } from "../constant";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { StoreKey } from './constant';
 
 export enum SubmitKey {
-  Enter = "Enter",
-  CtrlEnter = "Ctrl + Enter",
-  ShiftEnter = "Shift + Enter",
-  AltEnter = "Alt + Enter",
-  MetaEnter = "Meta + Enter",
+  Enter = 'Enter',
+  CtrlEnter = 'Ctrl + Enter',
+  ShiftEnter = 'Shift + Enter',
+  AltEnter = 'Alt + Enter',
+  MetaEnter = 'Meta + Enter',
 }
 
 export enum Theme {
-  Auto = "auto",
-  Dark = "dark",
-  Light = "light",
+  Auto = 'auto',
+  Dark = 'dark',
+  Light = 'light',
 }
 
 export const DEFAULT_CONFIG = {
   submitKey: SubmitKey.CtrlEnter as SubmitKey,
-  avatar: "1f603",
+  avatar: '1f603',
   fontSize: 14,
   theme: Theme.Auto as Theme,
   tightBorder: false,
@@ -30,7 +30,7 @@ export const DEFAULT_CONFIG = {
   dontShowMaskSplashScreen: false, // dont show splash screen when create chat
 
   modelConfig: {
-    model: "gpt-3.5-turbo" as ModelType,
+    model: 'gpt-3.5-turbo' as ModelType,
     temperature: 0.5,
     max_tokens: 2000,
     presence_penalty: 0,
@@ -47,66 +47,66 @@ export type ChatConfigStore = ChatConfig & {
   update: (updater: (config: ChatConfig) => void) => void;
 };
 
-export type ModelConfig = ChatConfig["modelConfig"];
+export type ModelConfig = ChatConfig['modelConfig'];
 
 const ENABLE_GPT4 = true;
 
 export const ALL_MODELS = [
   {
-    name: "gpt-4",
+    name: 'gpt-4',
     available: ENABLE_GPT4,
   },
   {
-    name: "gpt-4-0314",
+    name: 'gpt-4-0314',
     available: ENABLE_GPT4,
   },
   {
-    name: "gpt-4-32k",
+    name: 'gpt-4-32k',
     available: ENABLE_GPT4,
   },
   {
-    name: "gpt-4-32k-0314",
+    name: 'gpt-4-32k-0314',
     available: ENABLE_GPT4,
   },
   {
-    name: "gpt-3.5-turbo",
+    name: 'gpt-3.5-turbo',
     available: true,
   },
   {
-    name: "gpt-3.5-turbo-0301",
+    name: 'gpt-3.5-turbo-0301',
     available: true,
   },
   {
-    name: "qwen-v1", // 通义千问
+    name: 'qwen-v1', // 通义千问
     available: false,
   },
   {
-    name: "ernie", // 文心一言
+    name: 'ernie', // 文心一言
     available: false,
   },
   {
-    name: "spark", // 讯飞星火
+    name: 'spark', // 讯飞星火
     available: false,
   },
   {
-    name: "llama", // llama
+    name: 'llama', // llama
     available: false,
   },
   {
-    name: "chatglm", // chatglm-6b
+    name: 'chatglm', // chatglm-6b
     available: false,
   },
 ] as const;
 
-export type ModelType = (typeof ALL_MODELS)[number]["name"];
+export type ModelType = (typeof ALL_MODELS)[number]['name'];
 
 export function limitNumber(
   x: number,
   min: number,
   max: number,
-  defaultValue: number,
+  defaultValue: number
 ) {
-  if (typeof x !== "number" || isNaN(x)) {
+  if (typeof x !== 'number' || isNaN(x)) {
     return defaultValue;
   }
 
@@ -163,6 +163,6 @@ export const useAppConfig = create<ChatConfigStore>()(
 
         return state;
       },
-    },
-  ),
+    }
+  )
 );

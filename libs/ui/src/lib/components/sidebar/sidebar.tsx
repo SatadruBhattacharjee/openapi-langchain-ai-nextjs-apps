@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import styles from './home.module.scss';
+import styles from '../home/home.module.scss';
 
 import { IconButton } from '../button';
 import SettingsIcon from '../icons/settings.svg';
@@ -13,7 +13,8 @@ import PluginIcon from '../icons/plugin.svg';
 
 import Locale from '@chat/locals';
 
-import { useAppConfig, useChatStore } from '../../store';
+import { useAppConfig } from '@chat/constant';
+import { useChatStore } from '../../store';
 
 import {
   MAX_SIDEBAR_WIDTH,

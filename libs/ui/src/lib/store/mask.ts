@@ -1,10 +1,10 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { BUILTIN_MASKS } from "../masks";
-import { getLang, Lang } from "../locales";
-import { DEFAULT_TOPIC, Message } from "./chat";
-import { ModelConfig, ModelType, useAppConfig } from "./config";
-import { StoreKey } from "../constant";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { BUILTIN_MASKS } from '../masks';
+import { getLang, Lang } from '@chat/locals';
+import { DEFAULT_TOPIC, Message } from './chat';
+import { ModelConfig, ModelType, useAppConfig } from '@chat/constant';
+import { StoreKey } from '@chat/constant';
 
 export type Mask = {
   id: number;
@@ -32,7 +32,7 @@ type MaskStore = MaskState & {
 };
 
 export const DEFAULT_MASK_ID = 1145141919810;
-export const DEFAULT_MASK_AVATAR = "gpt-bot";
+export const DEFAULT_MASK_AVATAR = 'gpt-bot';
 export const createEmptyMask = () =>
   ({
     id: DEFAULT_MASK_ID,
@@ -84,7 +84,7 @@ export const useMaskStore = create<MaskStore>()(
       },
       getAll() {
         const userMasks = Object.values(get().masks).sort(
-          (a, b) => b.id - a.id,
+          (a, b) => b.id - a.id
         );
         return userMasks.concat(BUILTIN_MASKS);
       },
@@ -95,6 +95,6 @@ export const useMaskStore = create<MaskStore>()(
     {
       name: StoreKey.Mask,
       version: 2,
-    },
-  ),
+    }
+  )
 );

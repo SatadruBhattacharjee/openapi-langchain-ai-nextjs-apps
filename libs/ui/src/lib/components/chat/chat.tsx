@@ -49,7 +49,7 @@ import { Prompt, usePromptStore } from '../../store/prompt';
 import Locale from '@chat/locals';
 
 import { IconButton } from '../button';
-import styles from './home.module.scss';
+import styles from '../home/home.module.scss';
 import chatStyle from './chat.module.scss';
 
 import { ListItem, Modal, showModal } from '../ui-lib/ui-lib';

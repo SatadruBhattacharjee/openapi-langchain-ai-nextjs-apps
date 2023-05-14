@@ -27,7 +27,8 @@
     "**/*.js",
     "**/*.jsx",
     "next-env.d.ts",
-    "../../dist/apps/finace-report-pdf-chatgpt/.next/types/**/*.ts"
+    "../../dist/apps/finace-report-pdf-chatgpt/.next/types/**/*.ts",
+    "../../apps/finace-report-pdf-chatgpt/.next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

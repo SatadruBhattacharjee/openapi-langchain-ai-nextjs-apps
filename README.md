@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./docs/images/icon.svg" alt="icon"/>
+<img src="./docs/images/chat-icon.jpeg" alt="icon"/>
 
 <h1 align="center"> Enterprise ChatGPT with Multilingual support </h1>
 
@@ -17,15 +17,15 @@
 - Awesome prompts powered by [awesome-chatgpt-prompts-zh](https://github.com/PlexPt/awesome-chatgpt-prompts-zh) and [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
 - Automatically compresses chat history to support long conversations while also saving your tokens
 - In Memory Store
-- Easy Prompt Template crreations
-- I18n: English, हिंदी (Hindi)
+- Easy Prompt Template creations
+- I18n: English, **हिंदी (Hindi)**
 
-## Enterprise SUpport Roadmap
+## Enterprise Support Roadmap
 
 - [ ] Easy Enterprise Theaming support
 - [ ] gpt4free support [gpt4free](https://github.com/xtekky/gpt4free)
 - [ ] Vestor store intigration
-- [ ] Huggingface [Huggingface]https://huggingface.co/ and other LLM support
+- [ ] Huggingface [Huggingface](https://huggingface.co/) and other LLM support
 - [ ] Python based APIs
 - [ ] Unit Testing
 - [ ] One-Click Installations
@@ -37,7 +37,7 @@
 ## Screenshots
 
 ![Multilingual](./docs/images/hindichat.png)
-![Prompts] (./docs/images/prompts.png)
+![Prompts](./docs/images/prompts.png)
 
 ## Tech Stack
 

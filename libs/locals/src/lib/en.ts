@@ -74,6 +74,7 @@ const en: LocaleType = {
       Options: {
         cn: '简体中文',
         en: 'English',
+        in: 'हिंदी',
         tw: '繁體中文',
         es: 'Español',
         it: 'Italiano',

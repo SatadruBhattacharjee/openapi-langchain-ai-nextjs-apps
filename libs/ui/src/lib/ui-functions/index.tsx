@@ -1,6 +1,18 @@
 import { showToast } from '../components/ui-lib/ui-lib';
 import Locale from '@chat/locals';
 
+export function selectOrCopy(el: HTMLElement, content: string) {
+  const currentSelection = window.getSelection();
+
+  if (currentSelection?.type === "Range") {
+    return false;
+  }
+
+  copyToClipboard(content);
+
+  return true;
+}
+
 export async function copyToClipboard(text: string) {
   try {
     await navigator.clipboard.writeText(text);

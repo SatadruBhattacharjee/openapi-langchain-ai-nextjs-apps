@@ -33,11 +33,11 @@ import {
 
 import { SubmitKey, Theme } from '@chat/constant';
 
-import { downloadAs, selectOrCopy, autoGrowTextArea } from '@chat/utils';
+import { downloadAs, autoGrowTextArea } from '@chat/utils';
 
 import { useMobileScreen } from '../../hooks/utils';
 
-import { copyToClipboard } from '../../ui-functions';
+import { copyToClipboard, selectOrCopy } from '../../ui-functions';
 
 import dynamic from 'next/dynamic';
 

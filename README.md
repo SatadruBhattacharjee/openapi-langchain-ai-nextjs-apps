@@ -32,6 +32,7 @@
 
 ## How to use
 
+![Access Code](./docs/gifs/access.gif)
 ![Settings](./docs/images/settings.png)
 
 ## Screenshots
@@ -39,6 +40,8 @@
 ![Multilingual](./docs/images/hindichat.png)
 ![Prompts](./docs/images/prompts.png)
 
+## Monorepo Architecture
+![Chat UI](./docs/images/monorepo-architecture.png)
 ## Tech Stack
 
 - Next.js 13

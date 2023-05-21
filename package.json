@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "serve:ui": "nx run chat-ui:serve",
-    "build:ui": "nx run chat-ui:build"
+    "build:ui": "npx nx build chat-ui --prod"
   },
   "private": true,
   "dependencies": {

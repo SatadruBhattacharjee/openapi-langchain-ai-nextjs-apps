@@ -1,9 +1,9 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { StoreKey } from "@chat/constant";
-import { getHeaders } from "../requests";
-import { BOT_HELLO } from "./chat";
-import { ALL_MODELS } from "@chat/constant";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { StoreKey } from '@chat/constant';
+import { BOT_HELLO } from './chat';
+import { ALL_MODELS } from './config';
+import { getHeaders } from './client';
 
 export interface AccessControlStore {
   accessCode: string;
@@ -25,11 +25,11 @@ let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 export const useAccessStore = create<AccessControlStore>()(
   persist(
     (set, get) => ({
-      token: "",
-      accessCode: "",
+      token: '',
+      accessCode: '',
       needCode: true,
       hideUserApiKey: false,
-      openaiUrl: "/api/openai/",
+      openaiUrl: '/api/openai/',
 
       enabledAccessControl() {
         get().fetch();
@@ -53,8 +53,8 @@ export const useAccessStore = create<AccessControlStore>()(
       fetch() {
         if (fetchState > 0) return;
         fetchState = 1;
-        fetch("/api/config", {
-          method: "post",
+        fetch('/api/config', {
+          method: 'post',
           body: null,
           headers: {
             ...getHeaders(),
@@ -62,12 +62,12 @@ export const useAccessStore = create<AccessControlStore>()(
         })
           .then((res) => res.json())
           .then((res: DangerConfig) => {
-            console.log("[Config] got config from server", res);
+            console.log('[Config] got config from server', res);
             set(() => ({ ...res }));
 
             if (!res.enableGPT4) {
               ALL_MODELS.forEach((model) => {
-                if (model.name.startsWith("gpt-4")) {
+                if (model.name.startsWith('gpt-4')) {
                   (model as any).available = false;
                 }
               });
@@ -78,7 +78,7 @@ export const useAccessStore = create<AccessControlStore>()(
             }
           })
           .catch(() => {
-            console.error("[Config] failed to fetch config");
+            console.error('[Config] failed to fetch config');
           })
           .finally(() => {
             fetchState = 2;
@@ -88,6 +88,6 @@ export const useAccessStore = create<AccessControlStore>()(
     {
       name: StoreKey.Access,
       version: 1,
-    },
-  ),
+    }
+  )
 );

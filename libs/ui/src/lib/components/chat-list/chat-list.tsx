@@ -10,7 +10,7 @@ import {
   OnDragEndResponder,
 } from '@hello-pangea/dnd';
 
-import { useChatStore } from '../../store';
+import { useChatStore } from '@chat/store';
 
 import Locale from '@chat/locals';
 import { Link, useNavigate } from 'react-router-dom';

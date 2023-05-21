@@ -14,6 +14,8 @@ import MaskIcon from '../icons/mask.svg';
 import MaxIcon from '../icons/max.svg';
 import MinIcon from '../icons/min.svg';
 import ResetIcon from '../icons/reload.svg';
+import BreakIcon from '../icons/break.svg';
+import SettingsIcon from '../icons/chat-settings.svg';
 
 import LightIcon from '../icons/light.svg';
 import DarkIcon from '../icons/dark.svg';
@@ -22,14 +24,14 @@ import BottomIcon from '../icons/bottom.svg';
 import StopIcon from '../icons/pause.svg';
 
 import {
-  Message,
+  ChatMessage,
   useChatStore,
   BOT_HELLO,
   createMessage,
   useAccessStore,
   useAppConfig,
   DEFAULT_TOPIC,
-} from '../../store';
+} from '@chat/store';
 
 import { SubmitKey, Theme } from '@chat/constant';
 
@@ -41,8 +43,7 @@ import { copyToClipboard, selectOrCopy } from '../../ui-functions';
 
 import dynamic from 'next/dynamic';
 
-import { ControllerPool } from '../../requests';
-import { Prompt, usePromptStore } from '../../store/prompt';
+import { Prompt, usePromptStore } from '@chat/store';
 import Locale from '@chat/locals';
 
 import { IconButton } from '../button';
@@ -51,11 +52,13 @@ import chatStyle from './chat.module.scss';
 
 import { ListItem, Modal, showModal } from '../ui-lib/ui-lib';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LAST_INPUT_KEY, Path } from '@chat/constant';
+import { LAST_INPUT_KEY, Path, REQUEST_TIMEOUT_MS } from '@chat/constant';
 import { Avatar } from '../emoji/emoji';
 import { MaskAvatar, MaskConfig } from '../mask/mask';
-import { useMaskStore } from '../../store/mask';
+import { useMaskStore } from '@chat/store';
 import { useCommand } from '../../hooks/command';
+import { prettyObject } from '@chat/utils';
+import { ChatControllerPool } from '@chat/store';
 
 const Markdown = dynamic(
   async () => (await import('../markdown/markdown')).Markdown,
@@ -64,7 +67,7 @@ const Markdown = dynamic(
   }
 );
 
-function exportMessages(messages: Message[], topic: string) {
+function exportMessages(messages: ChatMessage[], topic: string) {
   const mdText =
     `# ${topic}\n\n` +
     messages
@@ -119,9 +122,13 @@ export function SessionConfigModel(props: { onClose: () => void }) {
             icon={<ResetIcon />}
             bordered
             text={Locale.Chat.Config.Reset}
-            onClick={() =>
-              confirm(Locale.Memory.ResetConfirm) && chatStore.resetSession()
-            }
+            onClick={() => {
+              if (confirm(Locale.Memory.ResetConfirm)) {
+                chatStore.updateCurrentSession(
+                  (session) => (session.memoryPrompt = '')
+                );
+              }
+            }}
           />,
           <IconButton
             key="copy"
@@ -144,6 +151,7 @@ export function SessionConfigModel(props: { onClose: () => void }) {
             updater(mask);
             chatStore.updateCurrentSession((session) => (session.mask = mask));
           }}
+          shouldSyncFromGlobal
           extraListItems={
             session.mask.modelConfig.sendMemory ? (
               <ListItem
@@ -288,6 +296,28 @@ export function PromptHints(props: {
   );
 }
 
+function ClearContextDivider() {
+  const chatStore = useChatStore();
+
+  return (
+    <div
+      className={chatStyle['clear-context']}
+      onClick={() =>
+        chatStore.updateCurrentSession(
+          (session) => (session.clearContextIndex = -1)
+        )
+      }
+    >
+      <div className={chatStyle['clear-context-tips']}>
+        {Locale.Context.Clear}
+      </div>
+      <div className={chatStyle['clear-context-revert-btn']}>
+        {Locale.Context.Revert}
+      </div>
+    </div>
+  );
+}
+
 function useScrollToBottom() {
   // for auto-scroll
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -320,6 +350,7 @@ export function ChatActions(props: {
 }) {
   const config = useAppConfig();
   const navigate = useNavigate();
+  const chatStore = useChatStore();
 
   // switch themes
   const theme = config.theme;
@@ -332,8 +363,8 @@ export function ChatActions(props: {
   }
 
   // stop all responses
-  const couldStop = ControllerPool.hasPending();
-  const stopAll = () => ControllerPool.stopAll();
+  const couldStop = ChatControllerPool.hasPending();
+  const stopAll = () => ChatControllerPool.stopAll();
 
   return (
     <div className={chatStyle['chat-input-actions']}>
@@ -358,7 +389,7 @@ export function ChatActions(props: {
           className={`${chatStyle['chat-input-action']} clickable`}
           onClick={props.showPromptModal}
         >
-          <BrainIcon />
+          <SettingsIcon />
         </div>
       )}
 
@@ -390,12 +421,28 @@ export function ChatActions(props: {
       >
         <MaskIcon />
       </div>
+
+      <div
+        className={`${chatStyle['chat-input-action']} clickable`}
+        onClick={() => {
+          chatStore.updateCurrentSession((session) => {
+            if (session.clearContextIndex === session.messages.length) {
+              session.clearContextIndex = -1;
+            } else {
+              session.clearContextIndex = session.messages.length;
+              session.memoryPrompt = ''; // will clear memory
+            }
+          });
+        }}
+      >
+        <BreakIcon />
+      </div>
     </div>
   );
 }
 
 export function Chat() {
-  type RenderMessage = Message & { preview?: boolean };
+  type RenderMessage = ChatMessage & { preview?: boolean };
 
   const chatStore = useChatStore();
   const [session, sessionIndex] = useChatStore((state) => [
@@ -488,8 +535,37 @@ export function Chat() {
 
   // stop response
   const onUserStop = (messageId: number) => {
-    ControllerPool.stop(sessionIndex, messageId);
+    ChatControllerPool.stop(sessionIndex, messageId);
   };
+
+  useEffect(() => {
+    chatStore.updateCurrentSession((session) => {
+      const stopTiming = Date.now() - REQUEST_TIMEOUT_MS;
+      session.messages.forEach((m) => {
+        // check if should stop all stale messages
+        if (m.isError || new Date(m.date).getTime() < stopTiming) {
+          if (m.streaming) {
+            m.streaming = false;
+          }
+
+          if (m.content.length === 0) {
+            m.isError = true;
+            m.content = prettyObject({
+              error: true,
+              message: 'empty response',
+            });
+          }
+        }
+      });
+
+      // auto sync mask config from global config
+      if (session.mask.syncGlobalConfig) {
+        console.log('[Mask] syncing from global, name = ', session.mask.name);
+        session.mask.modelConfig = { ...config.modelConfig };
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // check if should send message
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -503,12 +579,12 @@ export function Chat() {
       e.preventDefault();
       return;
     }
-    if (shouldSubmit(e)) {
+    if (shouldSubmit(e) && promptHints.length === 0) {
       doSubmit(userInput);
       e.preventDefault();
     }
   };
-  const onRightClick = (e: any, message: Message) => {
+  const onRightClick = (e: any, message: ChatMessage) => {
     // copy to clipboard
     if (selectOrCopy(e.currentTarget, message.content)) {
       e.preventDefault();
@@ -555,7 +631,9 @@ export function Chat() {
     inputRef.current?.focus();
   };
 
-  const context: RenderMessage[] = session.mask.context.slice();
+  const context: RenderMessage[] = session.mask.hideContext
+    ? []
+    : session.mask.context.slice();
 
   const accessStore = useAccessStore();
 
@@ -569,6 +647,12 @@ export function Chat() {
     }
     context.push(copiedHello);
   }
+
+  // clear context index = context length + index in messages
+  const clearContextIndex =
+    (session.clearContextIndex ?? -1) >= 0
+      ? session.clearContextIndex! + context.length
+      : -1;
 
   // preview messages
   const messages = context
@@ -704,86 +788,91 @@ export function Chat() {
             !(message.preview || message.content.length === 0);
           const showTyping = message.preview || message.streaming;
 
+          const shouldShowClearContextDivider = i === clearContextIndex - 1;
+
           return (
-            <div
-              key={i}
-              className={
-                isUser ? styles['chat-message-user'] : styles['chat-message']
-              }
-            >
-              <div className={styles['chat-message-container']}>
-                <div className={styles['chat-message-avatar']}>
-                  {message.role === 'user' ? (
-                    <Avatar avatar={config.avatar} />
-                  ) : (
-                    <MaskAvatar mask={session.mask} />
-                  )}
-                </div>
-                {showTyping && (
-                  <div className={styles['chat-message-status']}>
-                    {Locale.Chat.Typing}
+            <>
+              <div
+                key={i}
+                className={
+                  isUser ? styles['chat-message-user'] : styles['chat-message']
+                }
+              >
+                <div className={styles['chat-message-container']}>
+                  <div className={styles['chat-message-avatar']}>
+                    {message.role === 'user' ? (
+                      <Avatar avatar={config.avatar} />
+                    ) : (
+                      <MaskAvatar mask={session.mask} />
+                    )}
                   </div>
-                )}
-                <div className={styles['chat-message-item']}>
-                  {showActions && (
-                    <div className={styles['chat-message-top-actions']}>
-                      {message.streaming ? (
+                  {showTyping && (
+                    <div className={styles['chat-message-status']}>
+                      {Locale.Chat.Typing}
+                    </div>
+                  )}
+                  <div className={styles['chat-message-item']}>
+                    {showActions && (
+                      <div className={styles['chat-message-top-actions']}>
+                        {message.streaming ? (
+                          <div
+                            className={styles['chat-message-top-action']}
+                            onClick={() => onUserStop(message.id ?? i)}
+                          >
+                            {Locale.Chat.Actions.Stop}
+                          </div>
+                        ) : (
+                          <>
+                            <div
+                              className={styles['chat-message-top-action']}
+                              onClick={() => onDelete(message.id ?? i)}
+                            >
+                              {Locale.Chat.Actions.Delete}
+                            </div>
+                            <div
+                              className={styles['chat-message-top-action']}
+                              onClick={() => onResend(message.id ?? i)}
+                            >
+                              {Locale.Chat.Actions.Retry}
+                            </div>
+                          </>
+                        )}
+
                         <div
                           className={styles['chat-message-top-action']}
-                          onClick={() => onUserStop(message.id ?? i)}
+                          onClick={() => copyToClipboard(message.content)}
                         >
-                          {Locale.Chat.Actions.Stop}
+                          {Locale.Chat.Actions.Copy}
                         </div>
-                      ) : (
-                        <>
-                          <div
-                            className={styles['chat-message-top-action']}
-                            onClick={() => onDelete(message.id ?? i)}
-                          >
-                            {Locale.Chat.Actions.Delete}
-                          </div>
-                          <div
-                            className={styles['chat-message-top-action']}
-                            onClick={() => onResend(message.id ?? i)}
-                          >
-                            {Locale.Chat.Actions.Retry}
-                          </div>
-                        </>
-                      )}
-
-                      <div
-                        className={styles['chat-message-top-action']}
-                        onClick={() => copyToClipboard(message.content)}
-                      >
-                        {Locale.Chat.Actions.Copy}
+                      </div>
+                    )}
+                    <Markdown
+                      content={message.content}
+                      loading={
+                        (message.preview || message.content.length === 0) &&
+                        !isUser
+                      }
+                      onContextMenu={(e) => onRightClick(e, message)}
+                      onDoubleClickCapture={() => {
+                        if (!isMobileScreen) return;
+                        setUserInput(message.content);
+                      }}
+                      fontSize={fontSize}
+                      parentRef={scrollRef}
+                      defaultShow={i >= messages.length - 10}
+                    />
+                  </div>
+                  {!isUser && !message.preview && (
+                    <div className={styles['chat-message-actions']}>
+                      <div className={styles['chat-message-action-date']}>
+                        {message.date.toLocaleString()}
                       </div>
                     </div>
                   )}
-                  <Markdown
-                    content={message.content}
-                    loading={
-                      (message.preview || message.content.length === 0) &&
-                      !isUser
-                    }
-                    onContextMenu={(e) => onRightClick(e, message)}
-                    onDoubleClickCapture={() => {
-                      if (!isMobileScreen) return;
-                      setUserInput(message.content);
-                    }}
-                    fontSize={fontSize}
-                    parentRef={scrollRef}
-                    defaultShow={i >= messages.length - 10}
-                  />
                 </div>
-                {!isUser && !message.preview && (
-                  <div className={styles['chat-message-actions']}>
-                    <div className={styles['chat-message-action-date']}>
-                      {message.date.toLocaleString()}
-                    </div>
-                  </div>
-                )}
               </div>
-            </div>
+              {shouldShowClearContextDivider && <ClearContextDivider />}
+            </>
           );
         })}
       </div>

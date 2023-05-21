@@ -27,15 +27,15 @@ import {
   useUpdateStore,
   useAccessStore,
   useAppConfig,
-} from '../../store';
+} from '@chat/store';
 
 import { SubmitKey, Theme } from '@chat/constant';
 
-import Locale, { AllLangs, changeLang, getLang } from '@chat/locals';
+import Locale, { ALL_LANG_OPTIONS, AllLangs, changeLang, getLang } from '@chat/locals';
 import { copyToClipboard } from '../../ui-functions';
 import Link from 'next/link';
 import { Path, UPDATE_URL } from '@chat/constant';
-import { Prompt, SearchService, usePromptStore } from '../../store/prompt';
+import { Prompt, SearchService, usePromptStore } from '@chat/store';
 import { ErrorBoundary } from '../error/error';
 import { InputRange } from '../input-range/input-range';
 import { useNavigate } from 'react-router-dom';
@@ -419,7 +419,7 @@ export function Settings() {
             >
               {AllLangs.map((lang) => (
                 <option value={lang} key={lang}>
-                  {Locale.Settings.Lang.Options[lang]}
+                  {ALL_LANG_OPTIONS[lang]}
                 </option>
               ))}
             </Select>

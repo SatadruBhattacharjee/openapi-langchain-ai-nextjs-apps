@@ -12,8 +12,8 @@ import DeleteIcon from '../icons/delete.svg';
 import EyeIcon from '../icons/eye.svg';
 import CopyIcon from '../icons/copy.svg';
 
-import { DEFAULT_MASK_AVATAR, Mask, useMaskStore } from '../../store/mask';
-import { Message, ROLES, useChatStore } from '../../store';
+import { DEFAULT_MASK_AVATAR, Mask, ROLES, useMaskStore } from '@chat/store';
+import { ChatMessage, useAppConfig, useChatStore } from "@chat/store";
 import { ModelConfig } from '@chat/constant';
 import {
   Input,
@@ -24,7 +24,7 @@ import {
   Select,
 } from '../ui-lib/ui-lib';
 import { Avatar, AvatarPicker } from '../emoji/emoji';
-import Locale, { AllLangs, Lang } from '@chat/locals';
+import Locale, { ALL_LANG_OPTIONS, AllLangs, Lang } from '@chat/locals';
 import { useNavigate } from 'react-router-dom';
 
 import chatStyle from '../chat/chat.module.scss';
@@ -33,7 +33,7 @@ import { downloadAs, readFromFile } from '@chat/utils';
 import { Updater } from '@chat/domain';
 import { ModelConfigList } from '../model-config/model-config';
 import { FileName, Path } from '@chat/constant';
-import { BUILTIN_MASK_STORE } from '../../masks';
+import { BUILTIN_MASK_STORE } from '@chat/store';
 
 export function MaskAvatar(props: { mask: Mask }) {
   return props.mask.avatar !== DEFAULT_MASK_AVATAR ? (
@@ -48,6 +48,7 @@ export function MaskConfig(props: {
   updateMask: Updater<Mask>;
   extraListItems?: JSX.Element;
   readonly?: boolean;
+  shouldSyncFromGlobal?: boolean;
 }) {
   const [showPicker, setShowPicker] = useState(false);
 
@@ -56,8 +57,14 @@ export function MaskConfig(props: {
 
     const config = { ...props.mask.modelConfig };
     updater(config);
-    props.updateMask((mask) => (mask.modelConfig = config));
+    props.updateMask((mask) => {
+      mask.modelConfig = config;
+      // if user changed current session mask, it will disable auto sync
+      mask.syncGlobalConfig = false;
+    });
   };
+
+  const globalConfig = useAppConfig();
 
   return (
     <>
@@ -97,10 +104,48 @@ export function MaskConfig(props: {
             type="text"
             value={props.mask.name}
             onInput={(e) =>
-              props.updateMask((mask) => (mask.name = e.currentTarget.value))
+              props.updateMask((mask) => {
+                mask.name = e.currentTarget.value;
+              })
             }
           ></input>
         </ListItem>
+        <ListItem
+          title={Locale.Mask.Config.HideContext.Title}
+          subTitle={Locale.Mask.Config.HideContext.SubTitle}
+        >
+          <input
+            type="checkbox"
+            checked={props.mask.hideContext}
+            onChange={(e) => {
+              props.updateMask((mask) => {
+                mask.hideContext = e.currentTarget.checked;
+              });
+            }}
+          ></input>
+        </ListItem>
+        {props.shouldSyncFromGlobal ? (
+          <ListItem
+            title={Locale.Mask.Config.Sync.Title}
+            subTitle={Locale.Mask.Config.Sync.SubTitle}
+          >
+            <input
+              type="checkbox"
+              checked={props.mask.syncGlobalConfig}
+              onChange={(e) => {
+                if (
+                  e.currentTarget.checked &&
+                  confirm(Locale.Mask.Config.Sync.Confirm)
+                ) {
+                  props.updateMask((mask) => {
+                    mask.syncGlobalConfig = e.currentTarget.checked;
+                    mask.modelConfig = { ...globalConfig.modelConfig };
+                  });
+                }
+              }}
+            ></input>
+          </ListItem>
+        ) : null}
       </List>
 
       <List>
@@ -115,8 +160,8 @@ export function MaskConfig(props: {
 }
 
 function ContextPromptItem(props: {
-  prompt: Message;
-  update: (prompt: Message) => void;
+  prompt: ChatMessage;
+  update: (prompt: ChatMessage) => void;
   remove: () => void;
 }) {
   const [focusingInput, setFocusingInput] = useState(false);
@@ -168,12 +213,12 @@ function ContextPromptItem(props: {
 }
 
 export function ContextPrompts(props: {
-  context: Message[];
-  updateContext: (updater: (context: Message[]) => void) => void;
+  context: ChatMessage[];
+  updateContext: (updater: (context: ChatMessage[]) => void) => void;
 }) {
   const context = props.context;
 
-  const addContextPrompt = (prompt: Message) => {
+  const addContextPrompt = (prompt: ChatMessage) => {
     props.updateContext((context) => context.push(prompt));
   };
 
@@ -181,7 +226,7 @@ export function ContextPrompts(props: {
     props.updateContext((context) => context.splice(i, 1));
   };
 
-  const updateContextPrompt = (i: number, prompt: Message) => {
+  const updateContextPrompt = (i: number, prompt: ChatMessage) => {
     props.updateContext((context) => (context[i] = prompt));
   };
 
@@ -263,8 +308,15 @@ export function MaskPage() {
               maskStore.create(mask);
             }
           }
+          return;
         }
-      } catch {}
+        //if the content is a single mask.
+        if (importMasks.name) {
+          maskStore.create(importMasks);
+        }
+      } catch {
+        console.error('import mask failed');
+      }
     });
   };
 
@@ -332,7 +384,7 @@ export function MaskPage() {
               </option>
               {AllLangs.map((lang) => (
                 <option value={lang} key={lang}>
-                  {Locale.Settings.Lang.Options[lang]}
+                  {ALL_LANG_OPTIONS[lang]}
                 </option>
               ))}
             </Select>
@@ -360,7 +412,7 @@ export function MaskPage() {
                     <div className={styles['mask-name']}>{m.name}</div>
                     <div className={styles['mask-info'] + ' one-line'}>
                       {`${Locale.Mask.Item.Info(m.context.length)} / ${
-                        Locale.Settings.Lang.Options[m.lang]
+                        ALL_LANG_OPTIONS[m.lang]
                       } / ${m.modelConfig.model}`}
                     </div>
                   </div>

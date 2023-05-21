@@ -1,4 +1,4 @@
-import { Mask } from "../store/mask";
+import { Mask } from "../mask";
 import { IN_MASKS } from "./in";
 import { EN_MASKS } from "./en";
 
@@ -15,7 +15,7 @@ export const BUILTIN_MASK_STORE = {
     return this.masks[id] as Mask | undefined;
   },
   add(m: BuiltinMask) {
-    const mask = { ...m, id: this.buildinId++ };
+    const mask = { ...m, id: this.buildinId++, builtin: true };
     this.masks[mask.id] = mask;
     return mask;
   },

@@ -18,6 +18,7 @@
       "@chat/constant": ["libs/constant/src/index.ts"],
       "@chat/domain": ["libs/domain/src/index.ts"],
       "@chat/locals": ["libs/locals/src/index.ts"],
+      "@chat/store": ["libs/store/src/index.ts"],
       "@chat/ui": ["libs/ui/src/index.ts"],
       "@chat/utils": ["libs/utils/src/index.ts"]
     }

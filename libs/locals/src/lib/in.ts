@@ -23,7 +23,7 @@ const In = {
     Rename: 'चैट का नाम बदलें',
     Typing: 'टाइपिंग…',
     Input: (submitKey: string) => {
-      var inputHints = `${submitKey} भेजने के लिए`;
+      let inputHints = `${submitKey} भेजने के लिए`;
       if (submitKey === String(SubmitKey.Enter)) {
         inputHints += '，Shift + Enter के लिए दर्ज करें';
       }
@@ -146,7 +146,7 @@ const In = {
     },
 
     Usage: {
-      Title: '余额查询',
+      Title: 'तुला राशि जाँच',
       SubTitle(used: any, total: any) {
         return `इस महीने $${used} का उपयोग किया गया, कुल सदस्यता $${total}`;
       },
@@ -169,7 +169,7 @@ const In = {
       Title: 'एकल उत्तर सीमा (max_tokens)',
       SubTitle: 'एकल इंटरैक्शन में उपयोग किए जाने वाले टोकन की अधिकतम संख्या',
     },
-    PresencePenlty: {
+    PresencePenalty: {
       Title: 'विषय ताजगी (presence_penalty)',
       SubTitle:
         'जितना बड़ा मान होगा, उतनी ही अधिक संभावना है कि यह एक नए विषय पर विस्तृत होगा',
@@ -197,6 +197,8 @@ const In = {
     Toast: (x: any) => `सेट कर दिया गया है ${x} पूर्व-संदर्भ`,
     Edit: 'वर्तमान संवाद सेटिंग',
     Add: 'एक डिफ़ॉल्ट संवाद जोड़ें',
+    Clear: "Context Cleared",
+    Revert: "Revert",
   },
   Plugin: {
     Name: 'लगाना',
@@ -226,6 +228,15 @@ const In = {
     Config: {
       Avatar: 'चरित्र अवतार',
       Name: 'भूमिका का नाम',
+      Sync: {
+        Title: "वैश्विक कॉन्फ़िग का उपयोग करें",
+        SubTitle: "इस चैट में वैश्विक कॉन्फ़िगरेशन का उपयोग करें",
+        Confirm: "ग्लोबल कॉन्फिग के साथ कस्टम कॉन्फिग को ओवरराइड करने की पुष्टि करें?",
+      },
+      HideContext: {
+        Title: "प्रसंग संकेत छिपाएँ",
+        SubTitle: "चैट में संदर्भ-संबंधी संकेत न दिखाएं",
+      },
     },
   },
   NewChat: {
@@ -248,6 +259,12 @@ const In = {
   },
 };
 
-export type LocaleType = typeof In;
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
+export type LocaleType = DeepPartial<typeof In>;
+export type RequiredLocaleType = typeof In;
 
 export default In;

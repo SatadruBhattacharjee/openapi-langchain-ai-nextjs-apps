@@ -1,13 +1,17 @@
 import EN from './en';
 import IN from './in';
+import { merge } from './merge';
 
 export const AllLangs = ['en', 'in'] as const;
 export type Lang = (typeof AllLangs)[number];
 
+export const ALL_LANG_OPTIONS: Record<Lang, string> = {
+  in: 'हिन्दी',
+  en: 'English',
+};
+
 const LANG_KEY = 'lang';
 const DEFAULT_LANG = 'en';
-
-export type { LocaleType } from './in';
 
 function getItem(key: string) {
   try {
@@ -57,3 +61,13 @@ export function changeLang(lang: Lang) {
   location.reload();
 }
 
+const fallbackLang = EN;
+const targetLang = {
+  en: EN,
+  in: IN
+}[getLang()] as typeof IN;
+
+// if target lang missing some fields, it will use fallback lang string
+merge(fallbackLang, targetLang);
+
+export default fallbackLang as typeof EN;

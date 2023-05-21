@@ -165,7 +165,7 @@ const en: LocaleType = {
       Title: 'Max Tokens',
       SubTitle: 'Maximum length of input tokens and generated tokens',
     },
-    PresencePenlty: {
+    PresencePenalty: {
       Title: 'Presence Penalty',
       SubTitle:
         'A larger value increases the likelihood to talk about new topics',
@@ -191,8 +191,10 @@ const en: LocaleType = {
   },
   Context: {
     Toast: (x: any) => `With ${x} contextual prompts`,
-    Edit: 'Contextual and Memory Prompts',
-    Add: 'Add a Prompt',
+    Edit: "Contextual and Memory Prompts",
+    Add: "Add a Prompt",
+    Clear: "Context Cleared",
+    Revert: "Revert",
   },
   Plugin: {
     Name: 'Plugin',
@@ -220,18 +222,27 @@ const en: LocaleType = {
       Clone: 'Clone',
     },
     Config: {
-      Avatar: 'Bot Avatar',
-      Name: 'Bot Name',
+      Avatar: "Bot Avatar",
+      Name: "Bot Name",
+      Sync: {
+        Title: "Use Global Config",
+        SubTitle: "Use global config in this chat",
+        Confirm: "Confirm to override custom config with global config?",
+      },
+      HideContext: {
+        Title: "Hide Context Prompts",
+        SubTitle: "Do not show in-context prompts in chat",
+      },
     },
   },
   NewChat: {
-    Return: 'Return',
-    Skip: 'Skip',
-    Title: 'Pick a Mask',
-    SubTitle: 'Chat with the Soul behind the Mask',
-    More: 'Find More',
-    NotShow: 'Not Show Again',
-    ConfirmNoShow: 'Confirm to disable？You can enable it in settings later.',
+    Return: "Return",
+    Skip: "Just Start",
+    Title: "Pick a Mask",
+    SubTitle: "Chat with the Soul behind the Mask",
+    More: "Find More",
+    NotShow: "Never Show Again",
+    ConfirmNoShow: "Confirm to disable？You can enable it in settings later.",
   },
 
   UI: {

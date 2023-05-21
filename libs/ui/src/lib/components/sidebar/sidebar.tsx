@@ -13,7 +13,7 @@ import PluginIcon from '../icons/plugin.svg';
 
 import Locale from '@chat/locals';
 
-import { useAppConfig, useChatStore } from '../../store';
+import { useAppConfig, useChatStore } from '@chat/store';
 
 import {
   MAX_SIDEBAR_WIDTH,

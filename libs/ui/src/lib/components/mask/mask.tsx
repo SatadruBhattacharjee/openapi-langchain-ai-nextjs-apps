@@ -39,6 +39,8 @@ export function MaskAvatar(props: { mask: Mask }) {
   return props.mask.avatar !== DEFAULT_MASK_AVATAR ? (
     <Avatar avatar={props.mask.avatar} />
   ) : (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <Avatar model={props.mask.modelConfig.model} />
   );
 }

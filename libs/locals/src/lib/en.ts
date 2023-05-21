@@ -1,7 +1,7 @@
 import { SubmitKey } from '@chat/constant';
-import type { LocaleType } from './locals';
+import { RequiredLocaleType } from './locals';
 
-const en: LocaleType = {
+const en: RequiredLocaleType = {
   WIP: 'Coming Soon...',
   Error: {
     Unauthorized:

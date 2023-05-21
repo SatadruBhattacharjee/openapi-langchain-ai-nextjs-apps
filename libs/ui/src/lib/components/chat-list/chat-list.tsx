@@ -13,10 +13,10 @@ import {
 import { useChatStore } from '@chat/store';
 
 import Locale from '@chat/locals';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Path } from '@chat/constant';
 import { MaskAvatar } from '../mask/mask';
-import { Mask } from '../../store/mask';
+import { Mask } from '@chat/store';
 import { useRef, useEffect } from 'react';
 
 export function ChatItem(props: {

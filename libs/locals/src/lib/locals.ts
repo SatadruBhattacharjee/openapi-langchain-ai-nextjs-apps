@@ -2,6 +2,8 @@ import EN from './en';
 import IN from './in';
 import { merge } from './merge';
 
+export type { LocaleType, RequiredLocaleType } from "./in";
+
 export const AllLangs = ['en', 'in'] as const;
 export type Lang = (typeof AllLangs)[number];
 

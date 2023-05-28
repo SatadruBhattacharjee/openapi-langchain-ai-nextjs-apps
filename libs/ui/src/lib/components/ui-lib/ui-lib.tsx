@@ -42,10 +42,10 @@ export function ListItem(props: {
   className?: string;
 }) {
   return (
-    <div className={styles['list-item'] + ` ${props.className}`}>
-      <div className={styles['list-header']}>
-        {props.icon && <div className={styles['list-icon']}>{props.icon}</div>}
-        <div className={styles['list-item-title']}>
+    <div className={styles["list-item"] + ` ${props.className || ""}`}>
+      <div className={styles["list-header"]}>
+        {props.icon && <div className={styles["list-icon"]}>{props.icon}</div>}
+        <div className={styles["list-item-title"]}>
           <div>{props.title}</div>
           {props.subTitle && (
             <div className={styles['list-item-sub-title']}>

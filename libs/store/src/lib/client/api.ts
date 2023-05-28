@@ -1,5 +1,5 @@
 import { ACCESS_CODE_PREFIX } from "@chat/constant";
-import { useAccessStore } from "../";
+import { ChatMessage, useAccessStore } from "../";
 import { ModelConfig, ModelType } from '@chat/constant';
 import { ChatGPTApi } from "./platforms/openai";
 
@@ -55,6 +55,40 @@ export class ClientApi {
   prompts() {}
 
   masks() {}
+
+  async share(messages: ChatMessage[], avatarUrl: string | null = null) {
+    const msgs = messages
+      .map((m) => ({
+        from: m.role === "user" ? "human" : "gpt",
+        value: m.content,
+      }))
+      .concat([
+        {
+          from: "human",
+          value:
+            "Share from [Enterprise ChatGPT]: https://github.com/SatadruBhattacharjee/openapi-langchain-ai-nextjs-apps",
+        },
+      ]);
+    // Please do not modify this message
+
+    console.log("[Share]", msgs);
+    const res = await fetch("/sharegpt", {
+      body: JSON.stringify({
+        avatarUrl,
+        items: msgs,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const resJson = await res.json();
+    console.log("[Share]", resJson);
+    if (resJson.id) {
+      return `https://shareg.pt/${resJson.id}`;
+    }
+  }
 }
 
 export const api = new ClientApi();

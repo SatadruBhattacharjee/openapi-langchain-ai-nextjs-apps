@@ -41,6 +41,25 @@ const In = {
     Download: 'डाउनलोड करना',
     MessageFromYou: 'आप से संदेश',
     MessageFromChatGPT: 'संदेश प्रेषक ChatGPT',
+    Share: "साझा ShareGPT",
+    Format: {
+      Title: "निर्यात प्रपत्रt",
+      SubTitle: "मार्कडाउन या पीएनजी छवि",
+    },
+    IncludeContext: {
+      Title: "प्रसंग सहित",
+      SubTitle: "निर्यात संदर्भ मास्क में संकेत देता है या नहीं",
+    },
+    Steps: {
+      Select: "चुनना",
+      Preview: "पूर्व दर्शन",
+    },
+  },
+  Select: {
+    Search: "खोज",
+    All: "सबका चयन करें",
+    Latest: "नवीनतम का चयन करें",
+    Clear: "साफ़",
   },
   Memory: {
     Title: 'मेमोरी प्रॉम्प्ट',

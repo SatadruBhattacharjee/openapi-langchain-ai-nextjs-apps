@@ -1,15 +1,17 @@
 import EN from './en';
 import IN from './in';
+import AR from './ar';
 import { merge } from './merge';
 
 export type { LocaleType, RequiredLocaleType } from "./in";
 
-export const AllLangs = ['en', 'in'] as const;
+export const AllLangs = ['en', 'in', 'ar'] as const;
 export type Lang = (typeof AllLangs)[number];
 
 export const ALL_LANG_OPTIONS: Record<Lang, string> = {
   in: 'हिन्दी',
   en: 'English',
+  ar: 'عربى',
 };
 
 const LANG_KEY = 'lang';
@@ -66,7 +68,8 @@ export function changeLang(lang: Lang) {
 const fallbackLang = EN;
 const targetLang = {
   en: EN,
-  in: IN
+  in: IN,
+  ar: AR,
 }[getLang()] as typeof IN;
 
 // if target lang missing some fields, it will use fallback lang string

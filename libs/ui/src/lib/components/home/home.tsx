@@ -23,6 +23,8 @@ import {
 import { SideBar } from '../sidebar/sidebar';
 import { useAppConfig } from '@chat/store';
 
+import { getLang } from "@chat/locals";
+
 require('./polyfill');
 
 export function Loading(props: { noLogo?: boolean }) {
@@ -62,6 +64,13 @@ export function useSwitchTheme() {
   useEffect(() => {
     document.body.classList.remove('light');
     document.body.classList.remove('dark');
+
+
+    if (getLang() === 'ar') {
+      document.body.setAttribute('dir', 'rtl');
+    } else {
+      document.body.removeAttribute('dir');
+    }
 
     if (config.theme === 'dark') {
       document.body.classList.add('dark');

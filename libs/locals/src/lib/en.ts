@@ -24,7 +24,7 @@ const en: RequiredLocaleType = {
     Rename: 'Rename Chat',
     Typing: 'Typing…',
     Input: (submitKey: string) => {
-      var inputHints = `${submitKey} to send`;
+      let inputHints = `${submitKey} to send`;
       if (submitKey === String(SubmitKey.Enter)) {
         inputHints += ', Shift + Enter to wrap';
       }
@@ -93,6 +93,7 @@ const en: RequiredLocaleType = {
       Options: {
         cn: '简体中文',
         en: 'English',
+        ar: 'عربية',
         in: 'हिंदी',
         tw: '繁體中文',
         es: 'Español',
